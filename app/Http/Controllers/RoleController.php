@@ -6,9 +6,19 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
-
-class RoleController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+class RoleController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return[
+        new Middleware('permission:view roles',only:['index']),
+        new Middleware('permission:edit roles',only:['edit']),
+        new Middleware('permission:create roles',only:['create']),
+        new Middleware('permission:destroy roles',only:['destroy']),
+        ];
+    }
     public function index(){
         $roles = Role::orderBy('name','ASC')->paginate(10);
 
@@ -45,17 +55,29 @@ class RoleController extends Controller
             return redirect()->route('roles.create')->withInput()->withErrors($validator);
         }
     }
-    public function edit(request $request,$id){
+    public function edit(Request $request, $id)
+    {
         $role = Role::findById($id);
         $hasPermissions = $role->permissions->pluck('name');
-        $permissions = Permission::orderBy('name','ASC')->get();
+        $permissions = Permission::orderBy('name', 'ASC')->get();
+        
+    
+        $categorizedPermissions = [
+            'users' => $permissions->filter(fn($permission) => str_contains($permission->name, 'users')),
+            'roles' => $permissions->filter(fn($permission) => str_contains($permission->name, 'roles')),
+            'permissions' => $permissions->filter(fn($permission) => str_contains($permission->name, 'permissions')),
+            'articles' => $permissions->filter(fn($permission) => str_contains($permission->name, 'articles')),
+        ];
 
-        return view('roles.edit',[
-            'permissions'=>$permissions,
-            'hasPermissions'=>$hasPermissions,
-            'role'=>$role
+        return view('roles.edit', [
+            'permissions' => $permissions,
+            'categorizedPermissions' => $categorizedPermissions,
+            'hasPermissions' => $hasPermissions,
+            'role' => $role
         ]);
     }
+    
+    
  
       public function update($id, request $request){
 

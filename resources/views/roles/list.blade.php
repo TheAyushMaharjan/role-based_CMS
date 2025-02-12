@@ -13,9 +13,12 @@
                 <div class="p-6 text-gray-900">
                     {{ __("View Roles") }}
                 </div>
+                @can('create roles')
                 <div class="create p-6">
                     <a class="bg-black text-gray-200 rounded-md px-4 py-2" href="{{route('roles.create')}}">Create</a>
                 </div>
+                @endcan
+
             </div>
     
             <!-- Table Section -->
@@ -23,7 +26,7 @@
                 <table id='myTable' class="w-full">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>Sno.</th>
                             <th>Name</th>
                             <th>Permission</th>
                             <th>Created At</th>
@@ -41,8 +44,11 @@
 
                             <td>
                                 <!-- Edit Button -->
+                                @can('edit roles')
                                 <a class="bg-green-400 hover:bg-green-500 text-gray-700 rounded-md px-4 py-1 inline-block" href="{{route("roles.edit",$role->id)}}">Edit</a>
-                            
+                                @endcan
+
+                                @can('delete roles')
                                 <!-- Delete Button inside Form -->
                                 <form action="{{route("roles.delete",$role->id)}}" method="POST" style="display:inline;">
                                     @csrf
@@ -51,8 +57,9 @@
                                         Delete
                                     </button>
                                 </form>
-                            </td>
-                            
+                                @endcan
+
+                            </td> 
                         </tr>
                         @endforeach
                         @endif

@@ -27,17 +27,28 @@
                                 @enderror
                             </div>
                             <div class="grid grid-cols-4 mb-6">
-                                
-                                @if($permissions->isNotEmpty())
-                                @foreach ($permissions as $permission )
-                                <div class="mt-3">
-                                    <input {{($hasPermissions->contains($permission->name)) ? 'checked' : ''}} type="checkbox" id="permission-{{$permission->id}}" class="rounded" name="permission[]"
-                                    value="{{$permission->name}}">
-                                    <label for="permission-{{$permission->id}}">{{$permission->name}}</label>
-                                </div>
+                                @foreach($categorizedPermissions as $category => $categoryPermissions)
+                                    <div class="mt-3">
+                                        <!-- Heading for each category -->
+                                        <h3 class="text-xl font-bold mb-2">{{ ucfirst($category) }}</h3>
+                            
+                                        @foreach ($categoryPermissions as $permission)
+                                            <div class="mt-2">
+                                                <input 
+                                                    {{ $hasPermissions->contains($permission->name) ? 'checked' : '' }}
+                                                    type="checkbox" 
+                                                    id="permission-{{$permission->id}}" 
+                                                    class="rounded" 
+                                                    name="permissions[]" 
+                                                    value="{{ $permission->name }}"
+                                                >
+                                                <label for="permission-{{$permission->id}}">{{ $permission->name }}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 @endforeach
-                                @endif
                             </div>
+                            
                             <button class="hover:bg-black bg-gray-800 text-gray-200 rounded-md px-4 py-2">Update</button>
                         </div>
                     </form>

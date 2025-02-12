@@ -13,9 +13,12 @@
                 <div class="p-6 text-gray-900">
                     {{ __("View Permissions") }}
                 </div>
+                @can('create permissions')
                 <div class="create p-6">
                     <a class="bg-black text-gray-200 rounded-md px-4 py-2" href="{{route('permissions.create')}}">Create</a>
                 </div>
+                @endcan
+
             </div>
     
             <!-- Table Section -->
@@ -23,7 +26,7 @@
                 <table id='myTable' class="w-full">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>Sno.</th>
                             <th>Name</th>
                             <th>Created At</th>
                             <th>Action</th>
@@ -38,9 +41,12 @@
                             <td>{{ \Carbon\Carbon::parse($permission->created_at)->format('d M, Y') }}</td> <!-- Display the created_at date -->
                             <td>
                                 <!-- Edit Button -->
+                                @can('edit permissions') 
                                 <a class="bg-green-400 hover:bg-green-500 text-gray-700 rounded-md px-4 py-1 inline-block" href="{{route("permissions.edit",$permission->id)}}">Edit</a>
+                                @endcan
                             
                                 <!-- Delete Button inside Form -->
+                                @can('delete permissions') 
                                 <form action="{{route("permissions.delete",$permission->id)}}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -48,6 +54,8 @@
                                         Delete
                                     </button>
                                 </form>
+                                @endcan
+
                             </td>
                             
                         </tr>

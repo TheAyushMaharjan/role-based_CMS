@@ -1,8 +1,9 @@
 
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Articles') }}
+            {{ __('Update User') }}
         </h2>
     </x-slot>
 
@@ -10,53 +11,54 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{route('articles.store')}}" method="post">
+                    <form action="{{route('users.update',$users->id)}}" method="post">
                         @csrf
                         <div>
                             <div class="container flex justify-between items-center">
-                                <label for="" class="text-xl font-medium">Create new article</label>
+                                <label for="" class="text-xl font-medium">Update Form</label>
 
                                 <div class="create  ">
-                                    <a class=" px-4 py-2 flex items-center" href="{{route('articles.index')}}"><i
+                                    <a class=" px-4 py-2 flex items-center" href="{{route('users.index')}}"><i
                                             class="fa-solid fa-angle-left text-2xl p-3"></i> Back</a>
                                 </div>
                             </div>
                             {{-- Title --}}
                             <div class="container flex justify-between items-center">
-                                <label for="" class="text-xl font-medium m-2">Title*</label> 
+                                <label for="" class="text-xl font-medium m-2">Name*</label> 
                             </div>
                             <div class="mb-3">
-                                <input value="{{old('title')}}" name="title" placeholder="Enter the title"
+                                <input value="{{old('name',$users->name)}}" name="name" placeholder="Enter the name"
                                     type="text" class="border-gray-300 shadow-sm w-1/2 rounded-lg">
-                                @error('title')
+                                @error('name')
                                 <p class="text-red-400">{{$message}}</p>
                                 @enderror
                             </div>
 
                              {{-- Text --}}
                              <div class="container flex justify-between items-center">
-                                <label for="" class="text-xl font-medium m-2">Content</label> 
+                                <label for="" class="text-xl font-medium m-2">Email</label> 
                             </div>
                             <div class="mb-3">
-                                <textarea value="{{old('text')}}" name="text"   class="border-gray-300 shadow-sm w-1/2 rounded-lg"
-                                placeholder="Enter the content" ></textarea>
-
-                               
-                                @error('text')
+                                <textarea name="email" class="border-gray-300 shadow-sm w-1/2 rounded-lg"
+                                placeholder="Enter the content">{{ old('email', $users->email) }}</textarea>
+                            
+                                @error('email')
                                 <p class="text-red-400">{{$message}}</p>
                                 @enderror
                             </div>
+                             {{-- for roles --}}
+                            <div class="grid grid-cols-4 mb-6">
+                                @if($roles->isNotEmpty())
+                                @foreach ($roles as $role )
+                                <div class="mt-3">
+                                    <input {{($hasRoles->contains($role->id)) ? 'checked' : ''}}
 
-                             {{-- Author --}}
-                             <div class="container flex justify-between items-center">
-                                <label for="" class="text-xl font-medium m-2">Author*</label> 
-                            </div>
-                            <div class="mb-3">
-                                <input value="{{old('author')}}" name="author" placeholder="Enter the author"
-                                    type="text" class="border-gray-300 shadow-sm w-1/2 rounded-lg">
-                                @error('author')
-                                <p class="text-red-400">{{$message}}</p>
-                                @enderror
+                                     type="checkbox" id="role-{{$role->id}}" class="rounded" name="role[]"
+                                    value="{{$role->name}}">
+                                    <label for="role-{{$role->id}}">{{$role->name}}</label>
+                                </div>
+                                @endforeach
+                                @endif
                             </div>
                             <button class="bg-black text-gray-200 rounded-md px-4 py-2">Submit</button>
                         </div>
