@@ -50,7 +50,6 @@ class PermissionController extends Controller implements HasMiddleware
     public function edit(string $id)
     {
         $permission =Permission::findOrFail($id);
-
         return view('permissions.edit',compact('permission'));
     }
 
